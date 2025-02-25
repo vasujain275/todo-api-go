@@ -1,7 +1,14 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/vasujain275/todo-api-go/internal/utils"
+)
 
 func (app *application) healthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
+	utils.RespondWithJson(w, http.StatusOK, map[string]string{
+		"status":  "up",
+		"version": "v1",
+	})
 }

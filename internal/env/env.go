@@ -1,6 +1,7 @@
 package env
 
 import (
+	"log"
 	"os"
 	"strconv"
 )
@@ -12,9 +13,13 @@ func GetString(key, fallback string) string {
 	return fallback
 }
 
-func GetInt(key string, fallback int) (int, error) {
+func GetInt(key string, fallback int) int {
 	if value, ok := os.LookupEnv(key); ok {
-		return strconv.Atoi(value)
+		i, err := strconv.Atoi(value)
+		if err != nil {
+			log.Fatalf("error parsing %s: %v", key, err)
+		}
+		return i
 	}
-	return fallback, nil
+	return fallback
 }
