@@ -7,12 +7,11 @@ BUILD_DIR=bin
 BIN_NAME=main
 CMD_DIR=./cmd/api
 MIGRATIONS_DIR=./cmd/migrate/migrations
-DB_ADDR=$(DB_ADDR)
 
 # Tools
 MIGRATE_CMD=migrate
 
-.PHONY: all build run clean migrate test lint fmt vet docker-build docker-run
+.PHONY: all build run dev clean migrate test lint fmt vet docker-build docker-run
 
 # Default target
 all: build
@@ -27,6 +26,12 @@ run: build
 	@echo "Starting the application..."
 	./$(BUILD_DIR)/$(BIN_NAME)
 
+# Run the application in development mode
+dev:
+	@echo "Starting the application in development mode..."
+	air
+
+
 # Clean build artifacts
 clean:
 	@echo "Cleaning up..."
@@ -35,7 +40,7 @@ clean:
 # Run database migrations
 migrate:
 	@echo "Running database migrations..."
-	$(MIGRATE_CMD) -path=$(MIGRATIONS_DIR) -database=$(DB_ADDR) up
+	$(MIGRATE_CMD) -path=$(MIGRATIONS_DIR) -database="$(shell echo $$DB_ADDR)" up
 
 # Run tests
 test:
