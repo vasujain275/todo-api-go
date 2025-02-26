@@ -22,4 +22,19 @@ type TaskStore struct {
 }
 
 func (s *TaskStore) Create(ctx context.Context, task *Task) error {
+	query := `INSERT INTO tasks (user_id, title, description, completed) 
+	VALUES ($1, $2, $3, $4) RETURNING id, created_at, updated_at`
+
+	err := s.db.QueryRowContext(ctx,
+		query,
+		task.UserID,
+		task.Title,
+		task.Description,
+		task.Completed,
+		task.CreatedAt,
+		task.UpdatedAt,
+		task.DueAt).Scan(&task.ID, &task.CreatedAt, &task.UpdatedAt)
+
+	return err
+
 }
